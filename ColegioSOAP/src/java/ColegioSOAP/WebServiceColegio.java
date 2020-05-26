@@ -6,6 +6,7 @@
 package ColegioSOAP;
 
 import java.sql.*;
+import javax.json.Json;
 
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -67,12 +68,17 @@ public class WebServiceColegio extends Conexion {
                     System.out.println( " Nombres: " + Rs.getString(2) + " Apellidos: "
                                 + Rs.getString(3) + " Materia: " + Rs.getString(4) + " Nota: " + Rs.getString(5));
 
-                    resultado_consulta += 
+                    
+                        resultado_consulta += "{"+
                         
-                        "Codigo:" + Rs.getString(1) 
-                        + " Nombres: " + Rs.getString(2) + " Apellidos: " + Rs.getString(3) 
-                        + " Curso: " + Rs.getString(4) 
-                        + " Nota: " + Rs.getString(5);
+                        "\"Codigo\":\"" +  Rs.getString(1) +
+                        "\",\"Nombres\":\"" + Rs.getString(2) + 
+                        "\",\"Apellidos\":\"" +Rs.getString(3) +
+                        "\",\"Curso\":\"" + Rs.getString(4) +
+                        "\",\"Nota\":" + Rs.getString(5) +
+                        "}";
+                    
+                 
                 }
 
             }
@@ -238,6 +244,9 @@ public class WebServiceColegio extends Conexion {
 
         return resultado_consulta ;
     }
+
+    
+    
 
     
 }
