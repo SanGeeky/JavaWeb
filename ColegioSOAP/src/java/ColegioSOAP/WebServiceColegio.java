@@ -96,7 +96,7 @@ public class WebServiceColegio extends Conexion {
     @WebMethod(operationName = "EstudianteCurso")
     public String EstudianteCurso(@WebParam(name = "grado") String grado, @WebParam(name = "grupo") String grupo) {
         
-        String cadena="";
+        String resultado_consulta="";
            
         try{
             
@@ -109,19 +109,40 @@ public class WebServiceColegio extends Conexion {
                     + " on estudiantes.id_estudiante=matriculas.id_estudiante WHERE TRIM(cursos.grado)='"+grado.trim()+"'"
                     + "and TRIM(cursos.grupo)='"+grupo.trim()+"'");
             
+            Rs.next();
+            resultado_consulta += "{" +
+                    
+                    "\"Id_Curso\":\"" +Rs.getString(1) +
+                    "\",\"Grado\":\"" +Rs.getString(2) + 
+                    "\",\"Grupo\":\"" +Rs.getString(3) + 
+                    "\",\"Estudiantes\":[";
+            
             while (Rs.next())
             {
                 
-                System.out.println("codigo_Curso:" +Rs.getString(1)+" Grado: "+Rs.getString(2)+ " Grupo: "+Rs.getString(3)+ " id_Estudiante: "+Rs.getString(4)+ " Nombres: "+Rs.getString(5)+ "Apellidos:"+Rs.getString(6));
-                cadena+="codigo_Curso:" +Rs.getString(1)+" Grado: "+Rs.getString(2)+ " Grupo: "+Rs.getString(3)+ " id_Estudiante: "+Rs.getString(4)+ " Nombres: "+Rs.getString(5)+ "Apellidos:"+Rs.getString(6);
+                resultado_consulta += "{" +
+                    "\"Id_Estudiante\":\"" + Rs.getString(4) + 
+                    "\",\"Nombres\":\"" + Rs.getString(5) + 
+                    "\",\"Apellidos\":\""+ Rs.getString(6);
+                
+                if(Rs.isLast())
+                {
+                    resultado_consulta += "\"}]}";
+                }
+                else
+                    resultado_consulta += "\"},";
+
+                    
                 
             }
-                
+
+            System.out.println(resultado_consulta);
+
         }
         }catch (Exception ex){
             System.out.println("Error "+ex.getMessage());
         }
-        return cadena;
+        return resultado_consulta;
     }
 
     /**
@@ -138,27 +159,37 @@ public class WebServiceColegio extends Conexion {
 
                 Statement sentencia = db.createStatement();
                 ResultSet Rs = sentencia.executeQuery(
-                    "SELECT estudiantes.id_estudiante, nombres, apellidos, materias.materia, anios.anio " 
+                    "SELECT estudiantes.id_estudiante, nombres, apellidos,materias.id_materia,materias.materia, anios.anio " 
                     +"FROM estudiantes inner join estudiante_materias "
                     +"on estudiantes.id_estudiante = estudiante_materias.id_estudiante inner join  materias "
                    	+"on estudiante_materias.id_materia = materias.id_materia inner JOIN anios "
                     +"on estudiante_materias.id_anio = anios.id_anio " 
                     
                     +"WHERE TRIM(estudiantes.id_estudiante) = '" + codigo.trim() + "' ORDER BY anios.anio");
-                            
+                
+                Rs.next();
+                
+                resultado_consulta += "{" +
+                        
+                        "\"Codigo\":\"" + Rs.getString(1) +
+                        "\",\"Nombres\":\"" + Rs.getString(2) + 
+                        "\",\"Apellidos\":\"" + Rs.getString(3) +
+                        "\",\"Materias\":[";
+                        
                 while (Rs.next()) 
                 {
-                    System.out.println( " Nombres: " + Rs.getString(2) + " Apellidos: "
-                                + Rs.getString(3) + " Materia: " + Rs.getString(4) + " Anio: " + Rs.getString(5));
-
-                    resultado_consulta += 
-                        
-                          " Codigo:" + Rs.getString(1) 
-                        + " Nombres: " + Rs.getString(2) + " Apellidos: " + Rs.getString(3) 
-                        + " Materia: " + Rs.getString(4) 
-                        + " Anio: " + Rs.getString(5);
+                    resultado_consulta += "{" +
+                        "\"Id_Materia\":\"" + Rs.getString(4) +
+                        "\",\"Materia\":\"" + Rs.getString(5) +
+                        "\",\"Anio\":\"" + Rs.getString(6);
+                    if(Rs.isLast())
+                    {
+                        resultado_consulta += "\"}]}";
+                    }
+                    else
+                        resultado_consulta += "\"},";
                 }
-
+                System.out.println(resultado_consulta);
             }
         } 
         catch (final Exception ex) {
@@ -173,7 +204,7 @@ public class WebServiceColegio extends Conexion {
      */
     @WebMethod(operationName = "ConsultarPromedioPorCurso")
     public String ConsultarPromedioPorCurso() {
-        String resultado_consulta = "";
+        String resultado_consulta = "{\"promedios\":[";
         
         try{ 
             if (db != null) {
@@ -192,10 +223,21 @@ public class WebServiceColegio extends Conexion {
                             
                 while (Rs.next()) 
                 {
-                    System.out.println( " Anio: " + Rs.getString(1) + " Id_Curso: " + Rs.getString(2) + " Grado: " + Rs.getString(3) + " Grupo: " + Rs.getString(4) + "Nota: " + Rs.getString(5));
-                    resultado_consulta += " Anio: " + Rs.getString(1) + " Id_Curso: " + Rs.getString(2) + " Grado: " + Rs.getString(3) + " Grupo: " + Rs.getString(4) + "Nota: " + Rs.getString(5);
+                    //System.out.println( " Anio: " + Rs.getString(1) + " Id_Curso: " + Rs.getString(2) + " Grado: " + Rs.getString(3) + " Grupo: " + Rs.getString(4) + "Nota: " + Rs.getString(5));
+                    resultado_consulta += "{" +
+            
+                          "\"Anio\":\"" + Rs.getString(1) + 
+                          "\",\"Id_Curso\":\"" + Rs.getString(2) + 
+                          "\",\"Grado\":\"" + Rs.getString(3) + 
+                          "\",\"Grupo\":\"" + Rs.getString(4) + 
+                          "\",\"Nota\":" + Rs.getString(5) ;
+                    
+                    if(Rs.isLast())
+                        resultado_consulta += "}]}";
+                    else
+                        resultado_consulta += "},";                        
                 }
-
+                System.out.println(resultado_consulta);
             }
         } 
         catch (final Exception ex) {
@@ -230,10 +272,10 @@ public class WebServiceColegio extends Conexion {
                 {
                     System.out.println( " Anio: " + Rs.getString(1) + " Promedio Global: " + Rs.getString(2));
 
-                    resultado_consulta += 
+                    resultado_consulta += "{" +
             
-                          " Anio:" + Rs.getString(1) 
-                        + " Promedio Global: " + Rs.getString(2) ;
+                          "\"Anio\":\"" + Rs.getString(1) +
+                        "\",\"Promedio\":" + Rs.getString(2) + "}";
                 }
 
             }
