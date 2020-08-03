@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>Cliente WS</div>
+        Chat de Prueba
+        <div id="textochat"></div>
+        <br>
+        <input type="text" name="txtmensaje" id="txtmensaje">
+        <br>
+        <input type="button" value="Abrir WS" onclick="openSocket();" >
+        <input type="button" value="Enviar Mensaje" onclick="sendMessage();" >
+        <input type="button" value="Cerrar WS" onclick="closeSocket();">
+        
+    </body>
+    <script language="javascript">
+        var websocket;
+        var textochat=document.getElementById("textochat");
+        function openSocket(){
+            if(websocket!== undefined && websocket.readyState !== websocket.closed){
+                escribirRespuesta("WebSocket ya estó abierto");
+                return;
+            }
+            websocket=new WebSocket("ws://localhost:8080/WebSocketJava/servidor");
+            websocket.onopen=function(event){
+                if(event.data===undefined) return;
+                escribirRespuesta(event.data);
+            }
+            websocket.onmessage=function(event){
+                escribirRespuesta(event.data);
+                
+            }
+            websocket.onclose=function(){
+                escribirRespuesta("Conexion Cerrada");
+                
+            }
+        }
+        function sendMessage(){
+            var texto=document.getElementById("txtmensaje").value;
+            websocket.send(texto);
+        }
+        function closeSocket(){
+            websocket.close();
+        }
+        function escribirRespuesta(texto){
+            textochat.innerHTML+="</br>"+texto;
+            
+        }
+        
+    </script>
+</html>
