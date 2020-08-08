@@ -18,11 +18,13 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint("/servidor")
 public class ServerWebSocket {
+    
     @OnOpen
     public void onOpen(Session session){
+        //Nuevo Ciente se Conecta
         System.out.println("Solicitud conexion "+session.getId());
         try{
-            session.getBasicRemote().sendText("Conexion Creada");
+            session.getBasicRemote().sendText("Conexion Creada"); // Respuesta al Cliente que se conecto
         }catch(IOException ex){
             System.out.println("Error "+ex.getMessage());
         }
@@ -33,7 +35,7 @@ public class ServerWebSocket {
         try{
             for(Session s: session.getOpenSessions()){
                  s.getBasicRemote().sendText(message);
-                 System.out.println("OK"+message);
+                 System.out.println("OK"+message); /// Aqui mandamos a todos los usuarios
             }
             
         }catch(IOException ex){
@@ -42,9 +44,7 @@ public class ServerWebSocket {
     }
     @OnClose
     public void onClose(Session session){
-        System.out.println("Session Terminada:"+session.getId());
+        System.out.println("Session Terminada:"+session.getId()); //Cerramos el WebSocket
     }
-          
-    
-    
+         
 }
