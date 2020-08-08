@@ -6,6 +6,10 @@
 package chattcp;
 
 import static chattcp.Client.ServerPort;
+import java.awt.Dialog;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,8 +17,15 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.StringTokenizer;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 /**
  *
@@ -31,9 +42,12 @@ public class ClientForm extends javax.swing.JFrame {
     DataOutputStream dos;
     Thread sendMessage;
     Thread readMessage;
+    String userName;
 
+    
     public ClientForm() throws IOException {
         initComponents();
+        getUserName();
         connectToServer();
     }
 
@@ -53,6 +67,14 @@ public class ClientForm extends javax.swing.JFrame {
         chatTextArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         clientsCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -63,6 +85,7 @@ public class ClientForm extends javax.swing.JFrame {
             }
         });
 
+        messageText.setFont(new java.awt.Font("Consolas", 0, 18)); // NOI18N
         messageText.setToolTipText("");
         messageText.setName(""); // NOI18N
         messageText.addActionListener(new java.awt.event.ActionListener() {
@@ -72,6 +95,8 @@ public class ClientForm extends javax.swing.JFrame {
         });
 
         chatTextArea.setColumns(20);
+        chatTextArea.setFont(new java.awt.Font("Consolas", 1, 17)); // NOI18N
+        chatTextArea.setForeground(new java.awt.Color(51, 153, 255));
         chatTextArea.setRows(5);
         jScrollPane2.setViewportView(chatTextArea);
 
@@ -113,17 +138,31 @@ public class ClientForm extends javax.swing.JFrame {
 
     private void enviarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarBtnActionPerformed
         String msg = messageText.getText();
+        String usuario = clientsCombo.getSelectedItem().toString();
         try {
             // write on the output stream
-            dos.writeUTF(msg);
+            dos.writeUTF(msg.concat("#" + usuario));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         messageText.setText("");
         chatTextArea.append(msg + "\n");
     }//GEN-LAST:event_enviarBtnActionPerformed
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            dos.writeUTF("logout#TODOS");
+        } catch (IOException ex) {
+            Logger.getLogger(ClientForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    
     /**
      * @param args the command line arguments
      */
@@ -172,6 +211,8 @@ public class ClientForm extends javax.swing.JFrame {
     private javax.swing.JTextField messageText;
     // End of variables declaration//GEN-END:variables
 
+    
+
     private void connectToServer() throws UnknownHostException, IOException {
 
         Scanner scn = new Scanner(System.in);
@@ -184,28 +225,7 @@ public class ClientForm extends javax.swing.JFrame {
         dis = new DataInputStream(server.getInputStream());
         dos = new DataOutputStream(server.getOutputStream());
 
-        // sendMessage thread 
-        sendMessage = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-
-                    // read the message to deliver.
-                    //String msg = scn.nextLine();
-                    //String msg = messageText.getText();
-                    String msg = "";
-
-                    try {
-                        // write on the output stream
-
-                        dos.writeUTF(msg);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+        dos.writeUTF(userName);
 
         // readMessage thread 
         readMessage = new Thread(new Runnable() {
@@ -214,10 +234,25 @@ public class ClientForm extends javax.swing.JFrame {
 
                 while (true) {
                     try {
-                        // read the message sent to this client 
+                        // read the message sent to this client
                         String msg = dis.readUTF();
-                        System.out.println(msg);
-                        chatTextArea.append(msg + "\n");
+                        if (msg.endsWith(";")) {
+                            clientsCombo.removeAllItems();
+                            clientsCombo.addItem("TODOS");
+
+                            StringTokenizer st = new StringTokenizer(msg, ";");
+                            int usuarios = st.countTokens();
+                            for (int i = 0; i < usuarios; i++) {
+                                clientsCombo.addItem(st.nextElement());
+                            }
+
+                        } else {
+
+                            System.out.println(msg);
+                            chatTextArea.append(msg + "\n");
+
+                        }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -227,5 +262,12 @@ public class ClientForm extends javax.swing.JFrame {
 
         //sendMessage.start();
         readMessage.start();
+    }
+
+    private void getUserName() {
+        UserName nv = new UserName(this, true);
+        //usernameDialog dsd = new usernameDialog();
+        nv.setVisible(true);
+        userName = nv.username;
     }
 }

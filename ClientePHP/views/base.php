@@ -50,6 +50,21 @@
                       ?>
                     </div>
                 </li>
+                <li class="nav-item active">
+                  <?php
+                    echo '<a class="nav-link" href="/ClienteColegioSoap/views/estudiantesRest.php" target="_self" id="estudiantesRest_click">Estudiantes Rest <span class="sr-only">(current)</span></a>';
+                  ?>
+                </li>
+                <li class="nav-item active">
+                  <?php
+                    echo '<a class="nav-link" href="/ClienteColegioSoap/views/materiasRest.php" target="_self" id="materiasRest_click">Materias Rest <span class="sr-only">(current)</span></a>';
+                  ?>
+                </li>
+                <li class="nav-item active">
+                  <?php
+                    echo '<a class="nav-link" href="/ClienteColegioSoap/views/cursosRest.php" target="_self" id="materiasRest_click">Cursos Rest <span class="sr-only">(current)</span></a>';
+                  ?>
+                </li>
               </ul>
             </div>
         </nav>
