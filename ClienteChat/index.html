@@ -30,7 +30,8 @@
                     <div class="row no-gutters">
                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
                             <div class="users-container">
-                                <div class="chat-search-box">
+                                <h3 class="display-4" id="username"></h3>
+                                <!-- <div class="chat-search-box">
                                     <div class="input-group">
                                         <input class="form-control" placeholder="Search">
                                         <div class="input-group-btn">
@@ -39,14 +40,14 @@
                                             </button>
                                         </div>
                                     </div>
-                                </div>
+                                </div>  -->
                                 <ul class="users">
                                 </ul>
                             </div>
                         </div>
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
                             <div class="selected-user">
-                                <span>To: <span class="name">Emily Russell</span></span>
+                                <span>To: <span class="name" id="nombre_destinatario">TODOS</span></span>
                             </div>
                             <div class="chat-container">
                                 <ul class="chat-box chatContainerScroll">                                        
@@ -71,21 +72,13 @@
 
         </div>
         <!-- Row end -->
-        <div>Cliente WS</div>
-        Chat de Prueba
-        <div id="textochat"></div>
-        <br>
-        <input type="text" name="txtmensaje" id="txtmensajedd">
-        <br>
-        <input type="button" value="Abrir WS" onclick="openSocket();" >
-        <input type="button" value="Enviar Mensaje" onclick="sendMessage();" >
-        <input type="button" value="Cerrar WS" onclick="closeSocket();">
     </div>
     <!-- Content wrapper end -->
 
 </div>
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="md5.min.js"></script>
 <script src="websocket.js"></script>
 </body>
 </html>
