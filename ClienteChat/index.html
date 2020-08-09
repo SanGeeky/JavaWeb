@@ -41,26 +41,6 @@
                                     </div>
                                 </div>
                                 <ul class="users">
-                                    <li class="person" data-chat="person1">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar3.png" alt="Retail Admin">
-                                            <span class="status busy"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Steve Bangalter</span>
-                                            <span class="time">15/02/2019</span>
-                                        </p>
-                                    </li>
-                                    <li class="person" data-chat="person1">
-                                        <div class="user">
-                                            <img src="https://www.bootdey.com/img/Content/avatar/avatar1.png" alt="Retail Admin">
-                                            <span class="status offline"></span>
-                                        </div>
-                                        <p class="name-time">
-                                            <span class="name">Steve Bangalter</span>
-                                            <span class="time">15/02/2019</span>
-                                        </p>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -74,7 +54,7 @@
                                 <div class="form-group mt-3 mb-0">
                                     <div class="row">
                                         <div class="col">
-                                        <input class ="form-control" rows="3"  placeholder="Type your message here..." type="text" id="txtmensaje" name="txtmensaje">
+                                        <input onkeyup="onKeyUp(event)" class ="form-control" rows="3"  placeholder="Type your message here..." type="text" id="txtmensaje" name="txtmensaje">
                                         </div>
                                         <input class="btn btn-primary mb-2" type="button" value="Enviar Mensaje" onclick="sendMessage();" >
                                     </div>
