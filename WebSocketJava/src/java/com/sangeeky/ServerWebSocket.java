@@ -6,16 +6,13 @@
 package com.sangeeky;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.OnOpen;
 import javax.websocket.OnMessage;
-import javax.websocket.OnError;
 import javax.websocket.OnClose;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
@@ -88,11 +85,25 @@ public class ServerWebSocket {
                 String mensaje = st.nextToken();
                 String destinatario = st.nextToken();
                 String usuario = st.nextToken();
-                
-                for (Session s : session.getOpenSessions()) {
-                    s.getBasicRemote().sendText(mensaje.concat("#"+usuario));
-                    System.out.println("OK" + message); /// Aqui mandamos a todos los usuarios
+
+                if (destinatario.equals("TODOS")) {
+                    for (Session s : session.getOpenSessions()) {
+                        s.getBasicRemote().sendText(mensaje.concat("#" + usuario));
+                        System.out.println("OK" + message); /// Aqui mandamos a todos los usuarios
+                    }
+                } else {
+                    session.getBasicRemote().sendText(mensaje.concat("#" + usuario));
+                    for (Client c : clientList) {
+                        // if the recipient is found, write on its 
+                        // output stream 
+                        if (c.username.equals(destinatario) && c.clientSession.isOpen() == true) {
+                            c.clientSession.getBasicRemote().sendText(mensaje.concat("#"+usuario));
+                            System.out.println("OK" + message); /// Aqui mandamos al usuario especifico
+                            break;
+                        }
+                    }
                 }
+
             }
 
         } catch (IOException ex) {

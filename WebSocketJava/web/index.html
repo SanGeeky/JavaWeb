@@ -1,60 +1,84 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>Cliente WS</div>
-        Chat de Prueba
-        <div id="textochat"></div>
-        <br>
-        <input type="text" name="txtmensaje" id="txtmensaje">
-        <br>
-        <input type="button" value="Abrir WS" onclick="openSocket();" >
-        <input type="button" value="Enviar Mensaje" onclick="sendMessage();" >
-        <input type="button" value="Cerrar WS" onclick="closeSocket();">
-        
-    </body>
-    <script language="javascript">
-        var websocket;
-        var textochat=document.getElementById("textochat");
-        function openSocket(){
-            if(websocket!== undefined && websocket.readyState !== websocket.closed){
-                escribirRespuesta("WebSocket ya estó abierto");
-                return;
-            }
-            websocket=new WebSocket("ws://localhost:8080/WebSocketJava/servidor");
-            websocket.onopen=function(event){
-                if(event.data===undefined) return;
-                escribirRespuesta(event.data);
-            }
-            websocket.onmessage=function(event){
-                escribirRespuesta(event.data);
-                
-            }
-            websocket.onclose=function(){
-                escribirRespuesta("Conexion Cerrada");
-                
-            }
-        }
-        function sendMessage(){
-            var texto=document.getElementById("txtmensaje").value;
-            websocket.send(texto);
-        }
-        function closeSocket(){
-            websocket.close();
-        }
-        function escribirRespuesta(texto){
-            textochat.innerHTML+="</br>"+texto;
-            
-        }
-        
-    </script>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!--  This file has been downloaded from bootdey.com    @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <title>Chat WebSocket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+
+    <!-- Page header start -->
+    <!-- Page header end -->
+
+    <!-- Content wrapper start -->
+    <div class="content-wrapper">
+
+        <!-- Row start -->
+        <div class="row gutters">
+
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                <div class="card m-0">
+
+                    <!-- Row start -->
+                    <div class="row no-gutters">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
+                            <div class="users-container">
+                                <h3 class="display-4" id="username"></h3>
+                                <!-- <div class="chat-search-box">
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-info">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>  -->
+                                <ul class="users">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+                            <div class="selected-user">
+                                <span>To: <span class="name" id="nombre_destinatario">TODOS</span></span>
+                            </div>
+                            <div class="chat-container">
+                                <ul class="chat-box chatContainerScroll">                                        
+                                </ul>
+                                <div class="form-group mt-3 mb-0">
+                                    <div class="row">
+                                        <div class="col">
+                                        <input onkeyup="onKeyUp(event)" class ="form-control" rows="3"  placeholder="Type your message here..." type="text" id="txtmensaje" name="txtmensaje">
+                                        </div>
+                                        <input class="btn btn-primary mb-2" type="button" value="Enviar Mensaje" onclick="sendMessage();" >
+                                    </div>
+                                </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row end -->
+                </div>
+
+            </div>
+
+        </div>
+        <!-- Row end -->
+    </div>
+    <!-- Content wrapper end -->
+
+</div>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="md5.min.js"></script>
+<script src="websocket.js"></script>
+</body>
 </html>
