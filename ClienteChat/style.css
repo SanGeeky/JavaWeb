@@ -219,8 +219,15 @@ body{margin-top:20px;}
 }
 
 .chat-container {
+    height: 500px;
     position: relative;
     padding: 1rem;
+    
+}
+#mensajes {
+    height: 410px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .chat-container li.chat-left,
@@ -375,3 +382,4 @@ ul {
     margin-bottom: 2rem;
     box-shadow: none;
 }
+

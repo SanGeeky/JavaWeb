@@ -1,0 +1,18 @@
+{
+    "folders": [],
+    "settings": {},
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    //Enable per-language
+      "[javascript]": {
+        "editor.formatOnSave": true
+      },
+    "[javascriptreact]": {
+      "editor.formatOnSave": true
+  },
+  "emmet.includeLanguages": {
+      "javascript": "javascript",
+  },
+  "prettier.singleQuote": true
+}

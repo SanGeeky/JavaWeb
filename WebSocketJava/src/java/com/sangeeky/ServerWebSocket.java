@@ -88,16 +88,16 @@ public class ServerWebSocket {
 
                 if (destinatario.equals("TODOS")) {
                     for (Session s : session.getOpenSessions()) {
-                        s.getBasicRemote().sendText(mensaje.concat("#" + usuario));
+                        s.getBasicRemote().sendText(mensaje.concat("#" + destinatario + "#" + usuario));
                         System.out.println("OK" + message); /// Aqui mandamos a todos los usuarios
                     }
                 } else {
-                    session.getBasicRemote().sendText(mensaje.concat("#" + usuario));
+                    session.getBasicRemote().sendText(mensaje.concat("#" + destinatario + "#" + usuario));
                     for (Client c : clientList) {
                         // if the recipient is found, write on its 
                         // output stream 
                         if (c.username.equals(destinatario) && c.clientSession.isOpen() == true) {
-                            c.clientSession.getBasicRemote().sendText(mensaje.concat("#"+usuario));
+                            c.clientSession.getBasicRemote().sendText(mensaje.concat("#"+ destinatario + "#" + usuario));
                             System.out.println("OK" + message); /// Aqui mandamos al usuario especifico
                             break;
                         }
